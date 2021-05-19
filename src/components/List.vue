@@ -5,7 +5,7 @@
       <p class="list-counter">total: {{ totalCardInList }}</p>
       <div class="deletelist" @click="removeList">×</div>
     </div>
-    <div class="card-index">
+    <Draggable group="cards" :list="cards" @end="$emit('change')">
       <Card
         v-for="(item, index) in cards"
         :key="item.id"
@@ -13,8 +13,8 @@
         :cardIndex="index"
         :listIndex="listIndex"
       />
-      <CardAdd :listIndex="listIndex" />
-    </div>
+    </Draggable>
+    <CardAdd :listIndex="listIndex" />
   </div>
 </template>
 
@@ -22,11 +22,13 @@
 import CardAdd from "./CardAdd.vue";
 import Card from "./Card.vue";
 import { mapState } from "vuex";
+import Draggable from "vuedraggable";
 
 export default {
   components: {
     CardAdd,
     Card,
+    Draggable,
   },
   props: {
     title: {
@@ -39,14 +41,14 @@ export default {
     },
     cards: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapState(["lists"]),
     totalCardInList() {
-      return this.cards.length
-    }
+      return this.cards.length;
+    },
   },
   methods: {
     removeList() {
